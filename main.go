@@ -2,45 +2,55 @@ package main
 
 import (
 	"fmt"
-	"log"
 
-	"gorm.io/driver/postgres"
+	"github.com/gin-gonic/gin"
+	dbhandler "github.com/mattinordstrom/videostore/db"
 	"gorm.io/gorm"
 )
 
-type Rental struct {
-	VideoName string
-	Customer  string
+var db *gorm.DB
+
+func getRentals(c *gin.Context) {
+	var rentals []dbhandler.Rental
+	db.Find(&rentals)
+
+	c.JSON(200, gin.H{
+		"rentals": rentals,
+	})
 }
 
-func main() {
-	fmt.Println("Hello world")
-
-	// GIN HTTP
-	/*
-		r := gin.Default()
-		r.GET("/rental", func(c *gin.Context) {
-			c.JSON(200, gin.H{
-				"resp": "abc123",
-			})
-		})
-		r.Run(":3000")
-	*/
-	//GORM DB
-	dsn := "host=localhost user=postgres password=docker dbname=videostore port=5432 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-
-	if err != nil {
-		log.Fatal("Failed to connect to DB")
+func addRental(c *gin.Context) {
+	var body struct {
+		VideoName string
+		Customer  string
 	}
+	c.Bind(&body)
 
-	rental := Rental{VideoName: "Die Hard", Customer: "John Smith"}
+	//TODO need to specify everything in body?
+	rental := dbhandler.Rental{VideoName: body.VideoName, Customer: body.Customer}
 	result := db.Create(&rental)
 
+	//ERROR
 	if result.Error != nil {
 		fmt.Println("Error adding to db!")
+		c.Status(400)
 		return
 	}
 
+	//SUCCESS
 	fmt.Println("Success adding to db!")
+	c.JSON(200, gin.H{
+		"response": "success",
+	})
+}
+
+func main() {
+	fmt.Println("Retro Video Store - VHS & DVD")
+
+	db = dbhandler.ConnectToDB()
+
+	r := gin.Default()
+	r.POST("/rental", addRental)
+	r.GET("/rentals", getRentals)
+	r.Run(":3000")
 }
