@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	dbhandler "github.com/mattinordstrom/videostore/db"
+	pdfhandler "github.com/mattinordstrom/videostore/pdf"
 	"gorm.io/gorm"
 )
 
@@ -24,6 +25,10 @@ func getRentals(c *gin.Context) {
 }
 
 func addRental(c *gin.Context) {
+	finishedPDF := make(chan bool)
+
+	go pdfhandler.CreatePDF(finishedPDF)
+
 	var body struct {
 		VideoName string
 		Customer  string
@@ -46,6 +51,9 @@ func addRental(c *gin.Context) {
 
 	//SUCCESS
 	fmt.Println("Success adding to db!")
+
+	<-finishedPDF
+
 	c.JSON(200, gin.H{
 		"response": "success",
 	})
@@ -70,7 +78,6 @@ func returnRental(c *gin.Context) {
 
 func main() {
 	fmt.Println("Retro Video Store - VHS & DVD")
-
 	db = dbhandler.ConnectToDB()
 
 	r := gin.Default()

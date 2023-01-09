@@ -35,3 +35,6 @@ GET localhost:3000/rentals?customer=John%20Smith
 
 ### Return rental:
 PUT localhost:3000/rental/:id/return
+
+## Output PDF (WIP)
+receipt.pdf
