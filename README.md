@@ -31,4 +31,7 @@ POST localhost:3000/rental
 { "VideoName": "Die hard", "Customer": "John Smith" }  
 
 ### List rentals:
-GET localhost:3000/rentals
+GET localhost:3000/rentals?customer=John%20Smith
+
+### Return rental:
+PUT localhost:3000/rental/:id/return

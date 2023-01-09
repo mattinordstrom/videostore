@@ -7,11 +7,16 @@ import (
 	"gorm.io/gorm"
 )
 
-// TODO move model to separate file
+const (
+	RentalStatusAvailable = "available"
+	RentalStatusLoanedOut = "loanedout"
+)
+
 type Rental struct {
 	gorm.Model
 	VideoName string
 	Customer  string
+	Status    string
 }
 
 func ConnectToDB() *gorm.DB {
