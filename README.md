@@ -1,7 +1,7 @@
 # Retro Video Store - VHS & DVD
   
 ## Setup
-### Create DB
+### Create DB:
 ```sh
 sudo service postgresql stop
 ```
@@ -14,7 +14,7 @@ docker build -t videostore-postgres-db ./
 docker run -d --name videostore-postgresdb-container -p 5432:5432 videostore-postgres-db  
 ```
 
-### MIGRATE DB
+### Migrate DB:
 Creates table **rentals** with columns. 
 ```sh
 go run migrate/migratedb.go
@@ -26,9 +26,9 @@ go run main.go
 ```
 
 ## Make requests
-### Post new rental
+### Post new rental:
 POST localhost:3000/rental  
 { "VideoName": "Die hard", "Customer": "John Smith" }  
 
-### List rentals
+### List rentals:
 GET localhost:3000/rentals
