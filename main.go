@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	dbhandler "github.com/mattinordstrom/videostore/db"
 	pdfhandler "github.com/mattinordstrom/videostore/pdf"
 	"gorm.io/gorm"
@@ -11,7 +12,9 @@ import (
 
 var db *gorm.DB
 
-// TODO getPDF()...
+func getRentalPDF(c *gin.Context) {
+	c.File(c.Param("rentalid") + ".pdf")
+}
 
 func getRentals(c *gin.Context) {
 	var rentals []dbhandler.Rental
@@ -27,9 +30,10 @@ func getRentals(c *gin.Context) {
 }
 
 func addRental(c *gin.Context) {
-	finishedPDF := make(chan int)
+	rentalId := uuid.New()
 
-	go pdfhandler.CreatePDF(finishedPDF)
+	finishedPDF := make(chan int)
+	go pdfhandler.CreatePDF(finishedPDF, rentalId)
 
 	var body struct {
 		VideoName string
@@ -41,6 +45,7 @@ func addRental(c *gin.Context) {
 		VideoName: body.VideoName,
 		Customer:  body.Customer,
 		Status:    dbhandler.RentalStatusLoanedOut,
+		RentalID:  rentalId,
 	}
 	result := db.Create(&rental)
 
@@ -63,7 +68,7 @@ func addRental(c *gin.Context) {
 }
 
 func returnRental(c *gin.Context) {
-	result := db.Model(dbhandler.Rental{}).Where("id = ?", c.Param("id")).Update("status", dbhandler.RentalStatusAvailable)
+	result := db.Model(dbhandler.Rental{}).Where("rental_id = ?", c.Param("rentalid")).Update("status", dbhandler.RentalStatusAvailable)
 
 	//ERROR
 	if result.Error != nil {
@@ -85,7 +90,8 @@ func main() {
 
 	r := gin.Default()
 	r.POST("/rental", addRental)
-	r.PUT("/rental/:id/return", returnRental)
+	r.PUT("/rental/:rentalid/return", returnRental)
 	r.GET("/rentals", getRentals)
+	r.GET("/rental/receipt/:rentalid", getRentalPDF)
 	r.Run(":3000")
 }

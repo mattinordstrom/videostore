@@ -39,7 +39,7 @@ POST localhost:3000/rental
 GET localhost:3000/rentals?customer=John%20Smith
 
 ### Return rental:
-PUT localhost:3000/rental/:id/return
+PUT localhost:3000/rental/:rentalid/return
 
-## Output PDF (WIP)
-receipt.pdf
+## Output PDF (reciept)
+GET localhost:3000/rental/receipt/:rentalid

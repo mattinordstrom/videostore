@@ -3,6 +3,7 @@ package dbhandler
 import (
 	"log"
 
+	"github.com/google/uuid"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -17,6 +18,7 @@ type Rental struct {
 	VideoName string
 	Customer  string
 	Status    string
+	RentalID  uuid.UUID
 }
 
 func ConnectToDB() *gorm.DB {
