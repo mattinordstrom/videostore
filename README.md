@@ -20,6 +20,11 @@ Creates table **rentals** with columns.
 go run migrate/migratedb.go
 ```
 
+### Run DB:
+```sh
+docker start <container_id>
+```
+
 ## Run
 ```sh
 go run main.go

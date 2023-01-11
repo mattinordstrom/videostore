@@ -2,6 +2,7 @@ package pdfhandler
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/signintech/gopdf"
 )
@@ -13,11 +14,25 @@ func CreatePDF(finishedPDF chan bool) {
 	pdf.Start(gopdf.Config{PageSize: *gopdf.PageSizeA4})
 	pdf.AddPage()
 
+	err := pdf.AddTTFFont("roboto", "./roboto-v19-latin-500.ttf")
+	if err != nil {
+		log.Print(err.Error())
+		//TODO return status int to client
+		finishedPDF <- true
+		return
+	}
+
+	err = pdf.SetFont("roboto", "", 14)
+	if err != nil {
+		log.Print(err.Error())
+		//TODO return status int to client
+		finishedPDF <- true
+		return
+	}
+	pdf.Cell(nil, "receipt test 123")
+
 	pdf.SetLineWidth(1)
 	pdf.Oval(100, 200, 500, 500)
-
-	//TODO Set add font and text
-	//pdf.Cell(nil, "Test pdf output 123")
 
 	pdf.WritePdf("receipt.pdf")
 
