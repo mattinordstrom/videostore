@@ -7,7 +7,13 @@ import (
 	"github.com/signintech/gopdf"
 )
 
-func CreatePDF(finishedPDF chan bool) {
+const (
+	PDF_SUCCESS      = 1
+	PDF_FAIL_ADDFONT = 2
+	PDF_FAIL_SETFONT = 3
+)
+
+func CreatePDF(finishedPDF chan int) {
 	fmt.Println("Creating PDF..")
 
 	pdf := gopdf.GoPdf{}
@@ -18,7 +24,7 @@ func CreatePDF(finishedPDF chan bool) {
 	if err != nil {
 		log.Print(err.Error())
 		//TODO return status int to client
-		finishedPDF <- true
+		finishedPDF <- PDF_FAIL_ADDFONT
 		return
 	}
 
@@ -26,7 +32,7 @@ func CreatePDF(finishedPDF chan bool) {
 	if err != nil {
 		log.Print(err.Error())
 		//TODO return status int to client
-		finishedPDF <- true
+		finishedPDF <- PDF_FAIL_SETFONT
 		return
 	}
 	pdf.Cell(nil, "receipt test 123")
@@ -41,5 +47,5 @@ func CreatePDF(finishedPDF chan bool) {
 
 	fmt.Println("PDF created")
 
-	finishedPDF <- true
+	finishedPDF <- PDF_SUCCESS
 }

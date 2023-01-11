@@ -11,6 +11,8 @@ import (
 
 var db *gorm.DB
 
+// TODO getPDF()...
+
 func getRentals(c *gin.Context) {
 	var rentals []dbhandler.Rental
 	if c.Query("customer") != "" {
@@ -25,7 +27,7 @@ func getRentals(c *gin.Context) {
 }
 
 func addRental(c *gin.Context) {
-	finishedPDF := make(chan bool)
+	finishedPDF := make(chan int)
 
 	go pdfhandler.CreatePDF(finishedPDF)
 
@@ -52,10 +54,11 @@ func addRental(c *gin.Context) {
 	//SUCCESS
 	fmt.Println("Success adding to db!")
 
-	<-finishedPDF
+	pdfRes := <-finishedPDF
 
 	c.JSON(200, gin.H{
-		"response": "success",
+		"savedtodb":  "success",
+		"createdpdf": pdfRes,
 	})
 }
 
