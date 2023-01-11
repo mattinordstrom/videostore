@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Retro Video Store - VHS & DVD</title>
+		<script src="main.js"></script> 
+        <style>
+            table {
+                min-width: 600px;
+            }
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+                padding: 4px;
+            }
+        </style>
+	</head>
+
+	<body onload="javascript:init()">
+		<h1>Retro Video Store - VHS & DVD</h1>
+		<form>
+            <input placeholder="VideoName" />
+            <input placeholder="Customer" />
+            <button>Add new rental</button>
+        </form>
+        <br/>
+        <hr/>
+        <br/>
+		<div class="content">
+            <table>
+                <tr>
+                    <th>Video</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td>Matrix</td>
+                    <td>John Smith</td>
+                    <td>available</td>
+                    <td><button>Return rental</button></td>
+                    <td><button>PDF</button></td>
+                </tr>
+            </table>
+        </div>
+	</body>
+</html>

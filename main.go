@@ -12,6 +12,8 @@ import (
 
 var db *gorm.DB
 
+//TODO move to mapper.go
+
 func getRentalPDF(c *gin.Context) {
 	c.File(c.Param("rentalid") + ".pdf")
 }

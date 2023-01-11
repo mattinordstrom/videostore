@@ -16,7 +16,7 @@ const (
 type Rental struct {
 	gorm.Model
 	VideoName string
-	Customer  string
+	Customer  string //TODO make new table Customers and change this to CustomerID
 	Status    string
 	RentalID  uuid.UUID
 }
