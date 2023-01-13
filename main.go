@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	dbhandler "github.com/mattinordstrom/videostore/db"
@@ -15,7 +16,7 @@ var db *gorm.DB
 //TODO move to mapper.go
 
 func getRentalPDF(c *gin.Context) {
-	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080")
+	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080") //TODO use gin cors?
 	c.File(c.Param("rentalid") + ".pdf")
 }
 
@@ -27,7 +28,7 @@ func getRentals(c *gin.Context) {
 		db.Order("created_at DESC").Find(&rentals)
 	}
 
-	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080")
+	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080") //TODO use gin cors?
 	c.JSON(200, gin.H{
 		"rentals": rentals,
 	})
@@ -65,7 +66,7 @@ func addRental(c *gin.Context) {
 
 	pdfRes := <-finishedPDF
 
-	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080")
+	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080") //TODO use gin cors?
 	c.JSON(200, gin.H{
 		"savedtodb":  "success",
 		"createdpdf": pdfRes,
@@ -84,7 +85,7 @@ func returnRental(c *gin.Context) {
 
 	//SUCCESS
 	fmt.Println("Success adding to db!")
-	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080")
+	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080") //TODO use gin cors?
 	c.JSON(200, gin.H{
 		"response": "success",
 	})
@@ -95,9 +96,14 @@ func main() {
 	db = dbhandler.ConnectToDB()
 
 	r := gin.Default()
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://127.0.0.1:8080"}
+
 	r.POST("/rental", addRental)
 	r.PUT("/rental/:rentalid/return", returnRental)
 	r.GET("/rentals", getRentals)
 	r.GET("/rental/receipt/:rentalid", getRentalPDF)
+
+	r.Use(cors.New(config))
 	r.Run(":3000")
 }
