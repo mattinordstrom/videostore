@@ -43,3 +43,11 @@ PUT localhost:3000/rental/:rentalid/return
 
 ## Output PDF (reciept)
 GET localhost:3000/rental/receipt/:rentalid
+
+## Frontend
+```sh
+npm install -g http-server
+cd frontend
+http-server
+```
+Go to http://127.0.0.1:8080 in browser

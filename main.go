@@ -15,17 +15,19 @@ var db *gorm.DB
 //TODO move to mapper.go
 
 func getRentalPDF(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080")
 	c.File(c.Param("rentalid") + ".pdf")
 }
 
 func getRentals(c *gin.Context) {
 	var rentals []dbhandler.Rental
 	if c.Query("customer") != "" {
-		db.Where("customer = ?", c.Query("customer")).Find(&rentals)
+		db.Where("customer = ?", c.Query("customer")).Order("created_at DESC").Find(&rentals)
 	} else {
-		db.Find(&rentals)
+		db.Order("created_at DESC").Find(&rentals)
 	}
 
+	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080")
 	c.JSON(200, gin.H{
 		"rentals": rentals,
 	})
@@ -63,6 +65,7 @@ func addRental(c *gin.Context) {
 
 	pdfRes := <-finishedPDF
 
+	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080")
 	c.JSON(200, gin.H{
 		"savedtodb":  "success",
 		"createdpdf": pdfRes,
@@ -81,6 +84,7 @@ func returnRental(c *gin.Context) {
 
 	//SUCCESS
 	fmt.Println("Success adding to db!")
+	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080")
 	c.JSON(200, gin.H{
 		"response": "success",
 	})
