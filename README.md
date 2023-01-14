@@ -26,6 +26,7 @@ sudo service postgresql stop
 ```
 
 ```sh
+docker ps -a
 docker start <container_id>
 ```
 

@@ -35,17 +35,18 @@ func getRentals(c *gin.Context) {
 }
 
 func addRental(c *gin.Context) {
-	rentalId := uuid.New()
-
-	finishedPDF := make(chan int)
-	go pdfhandler.CreatePDF(finishedPDF, rentalId)
+	//TODO add validation (already rented?)
 
 	var body struct {
 		VideoName string `json:"VideoName"`
 		Customer  string `json:"Customer"`
 	}
-
 	c.BindJSON(&body)
+
+	rentalId := uuid.New()
+
+	finishedPDF := make(chan int)
+	go pdfhandler.CreatePDF(finishedPDF, rentalId, body.VideoName, body.Customer)
 
 	rental := dbhandler.Rental{
 		VideoName: body.VideoName,

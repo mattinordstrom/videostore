@@ -33,6 +33,7 @@ function getPDF(rentalID) {
 }
 
 function returnRental(rentalID) {
+    //TODO add validation or disable button if already returned?
     fetch('http://localhost:3000/rental/'+rentalID+'/return', { method: 'PUT'})
     .then((response) => response.json())
     .then((data) => {

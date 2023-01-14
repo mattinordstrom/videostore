@@ -3,6 +3,7 @@ package pdfhandler
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/signintech/gopdf"
@@ -14,7 +15,7 @@ const (
 	PDF_FAIL_SETFONT = 3
 )
 
-func CreatePDF(finishedPDF chan int, rentalId uuid.UUID) {
+func CreatePDF(finishedPDF chan int, rentalId uuid.UUID, videoName string, customer string) {
 	fmt.Println("Creating PDF..")
 
 	pdf := gopdf.GoPdf{}
@@ -34,10 +35,16 @@ func CreatePDF(finishedPDF chan int, rentalId uuid.UUID) {
 		finishedPDF <- PDF_FAIL_SETFONT
 		return
 	}
-	pdf.Cell(nil, "receipt: "+rentalId.String())
+	pdf.Cell(nil, "Receipt: "+rentalId.String())
+	pdf.SetXY(10, 70)
+	pdf.Cell(nil, "Customer: "+customer)
+	pdf.SetXY(10, 100)
+	pdf.Cell(nil, "Video: "+videoName)
+	pdf.SetXY(10, 400)
+	pdf.Cell(nil, "Date: "+time.Now().Format("2006-01-02 15:04"))
 
 	pdf.SetLineWidth(1)
-	pdf.Oval(200, 100, 300, 300)
+	pdf.Oval(450, 10, 550, 110)
 
 	pdf.WritePdf(rentalId.String() + ".pdf")
 
