@@ -7,7 +7,7 @@ function fetchAllRentals() {
         
         data.rentals.forEach(rental => {
             const statusBgColor = rental.Status === 'available' ? '#95dd94' : '#f18383'; //green or red
-            htmlContent += '<tr id='+"41b6e958-8f02-4a59-8fa9-c32b841e2bba"+'><td>'+rental.CreatedAt+'</td><td>'+rental.UpdatedAt+'</td><td>'+rental.VideoName+'</td><td>'+rental.Customer+'</td><td style="background-color:'+statusBgColor+'">'+rental.Status+'</td>'+
+            htmlContent += '<tr id='+rental.RentalID+'><td>'+rental.CreatedAt+'</td><td>'+rental.UpdatedAt+'</td><td>'+rental.VideoName+'</td><td>'+rental.Customer+'</td><td style="background-color:'+statusBgColor+'">'+rental.Status+'</td>'+
             '<td><button onclick="returnRental(\''+rental.RentalID+'\')">Return rental</button></td>'+
             '<td><button onclick="getPDF(\''+rental.RentalID+'\')">PDF</button></td></tr>';
         });
@@ -35,4 +35,25 @@ function returnRental(rentalID) {
         console.log(data);
         fetchAllRentals();
     });
+}
+
+function addRental() {
+    const videoName = document.getElementById('VideoNameInput').value;
+    const customer = document.getElementById('CustomerInput').value;
+
+    fetch('http://localhost:3000/rental', { 
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+        body: JSON.stringify({ "VideoName": videoName, "Customer": customer })
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        console.log(data);
+        fetchAllRentals();
+    }).catch((err) => {
+        console.log(err);
+        });;
 }

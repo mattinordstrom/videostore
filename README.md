@@ -22,6 +22,10 @@ go run migrate/migratedb.go
 
 ### Run DB:
 ```sh
+sudo service postgresql stop
+```
+
+```sh
 docker start <container_id>
 ```
 

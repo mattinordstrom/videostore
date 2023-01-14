@@ -41,10 +41,11 @@ func addRental(c *gin.Context) {
 	go pdfhandler.CreatePDF(finishedPDF, rentalId)
 
 	var body struct {
-		VideoName string
-		Customer  string
+		VideoName string `json:"VideoName"`
+		Customer  string `json:"Customer"`
 	}
-	c.Bind(&body)
+
+	c.BindJSON(&body)
 
 	rental := dbhandler.Rental{
 		VideoName: body.VideoName,
