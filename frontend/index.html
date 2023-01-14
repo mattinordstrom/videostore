@@ -17,11 +17,16 @@
         </style>
 	</head>
 
-	<body onload="javascript:fetchAllRentals()">
+	<body onload="javascript:fetchRentals()">
 		<h1>Retro Video Store - VHS & DVD</h1>
         <input id="VideoNameInput" placeholder="VideoName" value="" />
         <input id="CustomerInput" placeholder="Customer" value=""/>
         <button onclick="addRental()">Add new rental</button>
+        <br/>
+        <hr/>
+        <br/>
+        <input id="FilterInput" placeholder="Filter" value=""/>
+        <button onclick="fetchRentals(true)">Filter rentals</button>
         <br/>
         <hr/>
         <br/>

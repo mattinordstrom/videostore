@@ -1,5 +1,9 @@
-function fetchAllRentals() {
-    fetch('http://localhost:3000/rentals')
+function fetchRentals(useFilter) {
+    let filter = '';
+    if(useFilter) {
+        filter = '?customer=' + document.getElementById('FilterInput').value;
+    }
+    fetch('http://localhost:3000/rentals'+filter)
     .then((response) => response.json())
     .then((data) => {
         console.log(data)
@@ -33,7 +37,7 @@ function returnRental(rentalID) {
     .then((response) => response.json())
     .then((data) => {
         console.log(data);
-        fetchAllRentals();
+        fetchRentals();
     });
 }
 
@@ -52,7 +56,7 @@ function addRental() {
     .then((response) => response.json())
     .then((data) => {
         console.log(data);
-        fetchAllRentals();
+        fetchRentals();
     }).catch((err) => {
         console.log(err);
         });;
