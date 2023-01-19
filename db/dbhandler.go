@@ -1,4 +1,4 @@
-package dbhandler
+package db
 
 import (
 	"log"
@@ -13,6 +13,8 @@ const (
 	RentalStatusLoanedOut = "loanedout"
 )
 
+var gormDB *gorm.DB
+
 type Rental struct {
 	gorm.Model
 	VideoName string
@@ -23,11 +25,12 @@ type Rental struct {
 
 func ConnectToDB() *gorm.DB {
 	dsn := "host=localhost user=postgres password=docker dbname=videostore port=5432 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	newGormDB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal("Failed to connect to DB")
 	}
 
-	return db
+	gormDB = newGormDB
+	return gormDB
 }

@@ -1,4 +1,4 @@
-package pdfhandler
+package pdf
 
 import (
 	"fmt"
