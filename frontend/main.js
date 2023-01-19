@@ -11,8 +11,10 @@ function fetchRentals(useFilter) {
         
         data.rentals.forEach(rental => {
             const statusBgColor = rental.Status === 'available' ? '#95dd94' : '#f18383'; //green or red
+            const returnButtonState = rental.Status === 'available' ? 'disabled' : '';
+
             htmlContent += '<tr id='+rental.RentalID+'><td>'+rental.CreatedAt+'</td><td>'+rental.UpdatedAt+'</td><td>'+rental.VideoName+'</td><td>'+rental.Customer+'</td><td style="background-color:'+statusBgColor+'">'+rental.Status+'</td>'+
-            '<td><button onclick="returnRental(\''+rental.RentalID+'\')">Return rental</button></td>'+
+            '<td><button '+returnButtonState+' onclick="returnRental(\''+rental.RentalID+'\')">Return rental</button></td>'+
             '<td><button onclick="getPDF(\''+rental.RentalID+'\')">PDF</button></td></tr>';
         });
         
@@ -33,7 +35,6 @@ function getPDF(rentalID) {
 }
 
 function returnRental(rentalID) {
-    //TODO add validation or disable button if already returned?
     fetch('http://localhost:3000/rental/'+rentalID+'/return', { method: 'PUT'})
     .then((response) => response.json())
     .then((data) => {

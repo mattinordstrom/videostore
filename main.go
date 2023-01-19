@@ -16,7 +16,6 @@ var db *gorm.DB
 //TODO move to mapper.go
 
 func getRentalPDF(c *gin.Context) {
-	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080") //TODO use gin cors?
 	c.File(c.Param("rentalid") + ".pdf")
 }
 
@@ -28,15 +27,10 @@ func getRentals(c *gin.Context) {
 		db.Order("created_at DESC").Find(&rentals)
 	}
 
-	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080") //TODO use gin cors?
-	c.JSON(200, gin.H{
-		"rentals": rentals,
-	})
+	c.JSON(200, gin.H{"rentals": rentals})
 }
 
 func addRental(c *gin.Context) {
-	//TODO add validation (already rented?)
-
 	var body struct {
 		VideoName string `json:"VideoName"`
 		Customer  string `json:"Customer"`
@@ -68,7 +62,6 @@ func addRental(c *gin.Context) {
 
 	pdfRes := <-finishedPDF
 
-	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080") //TODO use gin cors?
 	c.JSON(200, gin.H{
 		"savedtodb":  "success",
 		"createdpdf": pdfRes,
@@ -86,11 +79,8 @@ func returnRental(c *gin.Context) {
 	}
 
 	//SUCCESS
-	fmt.Println("Success adding to db!")
-	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8080") //TODO use gin cors?
-	c.JSON(200, gin.H{
-		"response": "success",
-	})
+	fmt.Println("Success updating db!")
+	c.JSON(200, gin.H{"response": "success"})
 }
 
 func main() {
@@ -100,12 +90,12 @@ func main() {
 	r := gin.Default()
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"http://127.0.0.1:8080"}
+	r.Use(cors.New(config))
 
 	r.POST("/rental", addRental)
 	r.PUT("/rental/:rentalid/return", returnRental)
 	r.GET("/rentals", getRentals)
 	r.GET("/rental/receipt/:rentalid", getRentalPDF)
 
-	r.Use(cors.New(config))
 	r.Run(":3000")
 }
