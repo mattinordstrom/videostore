@@ -15,7 +15,8 @@ func GetRentalPDF(c *gin.Context) {
 func GetRentals(c *gin.Context) {
 	var rentals []Rental
 	if c.Query("customer") != "" {
-		gormDB.Where("customer = ?", c.Query("customer")).Order("created_at DESC").Find(&rentals)
+		gormDB.Raw("SELECT * FROM rentals WHERE customer = ? ORDER BY created_at DESC", c.Query("customer")).Scan(&rentals)
+		//gormDB.Where("customer = ?", c.Query("customer")).Order("created_at DESC").Find(&rentals)
 	} else {
 		gormDB.Order("created_at DESC").Find(&rentals)
 	}

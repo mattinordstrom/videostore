@@ -40,11 +40,23 @@ func CreatePDF(finishedPDF chan int, rentalId uuid.UUID, videoName string, custo
 	pdf.Cell(nil, "Customer: "+customer)
 	pdf.SetXY(10, 100)
 	pdf.Cell(nil, "Video: "+videoName)
+
+	pdf.Line(1, 370, 400, 370)
+
 	pdf.SetXY(10, 400)
 	pdf.Cell(nil, "Date: "+time.Now().Format("2006-01-02 15:04"))
 
-	pdf.SetLineWidth(1)
-	pdf.Oval(450, 10, 550, 110)
+	// LOGO ///////////////////////////////
+	pdf.SetStrokeColor(255, 0, 0) // red
+	pdf.SetLineWidth(2)
+	pdf.SetFillColor(0, 255, 0) // green
+	pdf.Rectangle(410, 20, 570, 60, "DF", 3, 10)
+
+	pdf.SetFillColor(0, 0, 0)
+	pdf.SetXY(455, 30)
+	pdf.SetFontSize(22)
+	pdf.Cell(nil, "RETRO")
+	////////////////////////////////////////
 
 	pdf.WritePdf(rentalId.String() + ".pdf")
 
