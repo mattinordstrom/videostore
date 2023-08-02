@@ -8,69 +8,76 @@ import (
 	"github.com/mattinordstrom/videostore/pdf"
 )
 
-func GetRentals(c *gin.Context) {
+func GetRentals(context *gin.Context) {
 	var rentals []Rental
-	if c.Query("customer") != "" {
-		gormDB.Raw("SELECT * FROM rentals WHERE customer = ? ORDER BY created_at DESC", c.Query("customer")).Scan(&rentals)
+	if context.Query("customer") != "" {
+		gormDB.Raw("SELECT * FROM rentals WHERE customer = ? ORDER BY created_at DESC", context.Query("customer")).Scan(&rentals)
 	} else {
 		gormDB.Raw("SELECT * FROM rentals ORDER BY created_at DESC").Scan(&rentals)
 	}
 
-	c.JSON(200, gin.H{"rentals": rentals})
+	context.JSON(200, gin.H{"rentals": rentals})
 }
 
-func AddRental(c *gin.Context) {
+func AddRental(context *gin.Context) {
 	var body struct {
-		VideoName string `json:"VideoName"`
-		Customer  string `json:"Customer"`
+		VideoName string `json:"videoName"`
+		Customer  string `json:"customer"`
 	}
-	c.BindJSON(&body)
 
-	rentalId := uuid.New()
+	if err := context.BindJSON(&body); err != nil {
+		fmt.Println("Error binding json!")
+
+		return
+	}
+
+	rentalID := uuid.New()
 
 	finishedPDF := make(chan int)
-	go pdf.CreatePDF(finishedPDF, rentalId, body.VideoName, body.Customer)
+	go pdf.CreatePDF(finishedPDF, rentalID, body.VideoName, body.Customer)
 
 	rental := Rental{
 		VideoName: body.VideoName,
 		Customer:  body.Customer,
 		Status:    RentalStatusLoanedOut,
-		RentalID:  rentalId,
+		RentalID:  rentalID,
 	}
 
 	// TODO use Raw here
 	result := gormDB.Create(&rental)
 
-	//ERROR
+	// ERROR
 	if result.Error != nil {
 		fmt.Println("Error adding to db!")
-		c.Status(400)
+		context.Status(400)
+
 		return
 	}
 
-	//SUCCESS
+	// SUCCESS
 	fmt.Println("Success adding to db!")
 
 	pdfRes := <-finishedPDF
 
-	c.JSON(200, gin.H{
+	context.JSON(200, gin.H{
 		"savedtodb":  "success",
 		"createdpdf": pdfRes,
 	})
 }
 
-func ReturnRental(c *gin.Context) {
+func ReturnRental(context *gin.Context) {
 	// TODO use Raw here
-	result := gormDB.Model(Rental{}).Where("rental_id = ?", c.Param("rentalid")).Update("status", RentalStatusAvailable)
+	result := gormDB.Model(Rental{}).Where("rental_id = ?", context.Param("rentalid")).Update("status", RentalStatusAvailable)
 
-	//ERROR
+	// ERROR
 	if result.Error != nil {
 		fmt.Println("Error adding to db!")
-		c.Status(400)
+		context.Status(400)
+
 		return
 	}
 
-	//SUCCESS
+	// SUCCESS
 	fmt.Println("Success updating db!")
-	c.JSON(200, gin.H{"response": "success"})
+	context.JSON(200, gin.H{"response": "success"})
 }

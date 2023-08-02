@@ -8,10 +8,12 @@ linters:
     - funlen
     - gocognit
     - godot
+    - godox
     - gochecknoglobals
     - gofumpt
     - gomnd
     - gosec
+    - lll
     - maligned
     - nestif
     - noctx

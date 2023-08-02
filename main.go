@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -13,17 +14,19 @@ func main() {
 
 	db.ConnectToDB()
 
-	r := gin.Default()
+	router := gin.Default()
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"http://127.0.0.1:8080"}
-	r.Use(cors.New(config))
+	router.Use(cors.New(config))
 
-	r.POST("/rental", db.AddRental)
-	r.PUT("/rental/:rentalid/return", db.ReturnRental)
-	r.GET("/rentals", db.GetRentals)
-	r.GET("/rental/receipt/:rentalid", getRentalPDF)
+	router.POST("/rental", db.AddRental)
+	router.PUT("/rental/:rentalid/return", db.ReturnRental)
+	router.GET("/rentals", db.GetRentals)
+	router.GET("/rental/receipt/:rentalid", getRentalPDF)
 
-	r.Run(":3000")
+	if err := router.Run(":3000"); err != nil {
+		log.Fatalf("Server failed to run: %v", err)
+	}
 }
 
 func getRentalPDF(c *gin.Context) {

@@ -2,19 +2,17 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	dbhandler "github.com/mattinordstrom/videostore/db"
-	"gorm.io/gorm"
 )
 
-var db *gorm.DB
-
-func init() {
-	db = dbhandler.ConnectToDB()
-}
-
 func main() {
-	db.AutoMigrate(&dbhandler.Rental{})
+	var gormDB = dbhandler.ConnectToDB()
+
+	if err := gormDB.AutoMigrate(&dbhandler.Rental{}); err != nil {
+		log.Fatalf("Failed to auto-migrate: %v", err)
+	}
 
 	fmt.Println("Migrate DB done")
 }

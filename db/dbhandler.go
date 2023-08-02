@@ -18,7 +18,7 @@ var gormDB *gorm.DB
 type Rental struct {
 	gorm.Model
 	VideoName string
-	Customer  string //TODO make new table Customers and change this to CustomerID
+	Customer  string // TODO make new table Customers and change this to CustomerID
 	Status    string
 	RentalID  uuid.UUID
 }
@@ -32,5 +32,6 @@ func ConnectToDB() *gorm.DB {
 	}
 
 	gormDB = newGormDB
+
 	return gormDB
 }
