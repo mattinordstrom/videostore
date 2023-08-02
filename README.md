@@ -1,4 +1,4 @@
-# Retro Video Store - VHS & DVD 
+# Retro Video Store - VHS 
     
 ## Setup
 ### Stop current postgres:
