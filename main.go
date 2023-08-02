@@ -21,7 +21,11 @@ func main() {
 	r.POST("/rental", db.AddRental)
 	r.PUT("/rental/:rentalid/return", db.ReturnRental)
 	r.GET("/rentals", db.GetRentals)
-	r.GET("/rental/receipt/:rentalid", db.GetRentalPDF)
+	r.GET("/rental/receipt/:rentalid", getRentalPDF)
 
 	r.Run(":3000")
+}
+
+func getRentalPDF(c *gin.Context) {
+	c.File("pdf_output/" + c.Param("rentalid") + ".pdf")
 }

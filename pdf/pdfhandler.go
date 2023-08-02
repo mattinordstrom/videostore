@@ -58,7 +58,7 @@ func CreatePDF(finishedPDF chan int, rentalId uuid.UUID, videoName string, custo
 	pdf.Cell(nil, "RETRO")
 	////////////////////////////////////////
 
-	pdf.WritePdf(rentalId.String() + ".pdf")
+	pdf.WritePdf("pdf_output/" + rentalId.String() + ".pdf")
 
 	//Use to test concurrency:
 	//time.Sleep(5 * time.Second)

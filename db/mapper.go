@@ -8,17 +8,12 @@ import (
 	"github.com/mattinordstrom/videostore/pdf"
 )
 
-func GetRentalPDF(c *gin.Context) {
-	c.File(c.Param("rentalid") + ".pdf")
-}
-
 func GetRentals(c *gin.Context) {
 	var rentals []Rental
 	if c.Query("customer") != "" {
 		gormDB.Raw("SELECT * FROM rentals WHERE customer = ? ORDER BY created_at DESC", c.Query("customer")).Scan(&rentals)
-		//gormDB.Where("customer = ?", c.Query("customer")).Order("created_at DESC").Find(&rentals)
 	} else {
-		gormDB.Order("created_at DESC").Find(&rentals)
+		gormDB.Raw("SELECT * FROM rentals ORDER BY created_at DESC").Scan(&rentals)
 	}
 
 	c.JSON(200, gin.H{"rentals": rentals})
@@ -42,6 +37,8 @@ func AddRental(c *gin.Context) {
 		Status:    RentalStatusLoanedOut,
 		RentalID:  rentalId,
 	}
+
+	// TODO use Raw here
 	result := gormDB.Create(&rental)
 
 	//ERROR
@@ -63,6 +60,7 @@ func AddRental(c *gin.Context) {
 }
 
 func ReturnRental(c *gin.Context) {
+	// TODO use Raw here
 	result := gormDB.Model(Rental{}).Where("rental_id = ?", c.Param("rentalid")).Update("status", RentalStatusAvailable)
 
 	//ERROR

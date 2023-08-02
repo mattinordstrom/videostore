@@ -27,10 +27,10 @@ function getPDF(rentalID) {
     fetch('http://localhost:3000/rental/receipt/'+rentalID)
         .then((response) => response.blob())
         .then((blob) => {
-        const _url = window.URL.createObjectURL(blob);
-        window.open(_url, '_blank');
+            const _url = window.URL.createObjectURL(blob);
+            window.open(_url, '_blank');
         }).catch((err) => {
-        console.log(err);
+            console.log(err);
         });
 }
 

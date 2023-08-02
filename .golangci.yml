@@ -1,0 +1,21 @@
+linters:
+  enable-all: true
+  disable:
+    - cyclop
+    - exhaustivestruct
+    - exhaustruct
+    - forbidigo
+    - funlen
+    - gocognit
+    - godot
+    - gochecknoglobals
+    - gofumpt
+    - gomnd
+    - gosec
+    - maligned
+    - nestif
+    - noctx
+    - paralleltest
+    - testpackage
+    - usestdlibvars
+    - wsl

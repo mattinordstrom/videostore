@@ -1,10 +1,18 @@
-# Retro Video Store - VHS & DVD
-  
+# Retro Video Store - VHS & DVD 
+    
 ## Setup
-### Create DB:
+### Stop current postgres:
 ```sh
-sudo service postgresql stop
+sudo systemctl stop postgresql
 ```
+or
+```sh
+sudo systemctl stop postgresql
+sudo systemctl disable postgresql
+```
+
+### Create DB:
+
 
 ```sh
 docker build -t videostore-postgres-db ./  
@@ -35,6 +43,11 @@ docker start <container_id>
 go run main.go
 ```
 
+## Start DB and Run
+```sh
+./start.sh
+```
+
 ## Make requests
 ### Post new rental:
 POST localhost:3000/rental  
@@ -56,3 +69,36 @@ cd frontend
 http-server
 ```
 Go to http://127.0.0.1:8080 in browser
+
+___
+
+  
+##  
+##  
+## Run tests:  
+```sh
+$ go test ./... -v
+```  
+  
+
+##  
+##  
+## Run lint:  
+```sh  
+$ golangci-lint run -v
+```  
+  
+
+##  
+##  
+## Precommit hook:  
+```sh
+$ pip3 install pre-commit
+$ pre-commit install
+```  
+  
+##  
+#### Run precommit manually    
+```sh
+$ pre-commit run --all-files
+```  
