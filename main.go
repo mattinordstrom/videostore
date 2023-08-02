@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Retro Video Store - VHS & DVD")
+	fmt.Println("Retro Video Store - VHS")
 
 	db.ConnectToDB()
 
