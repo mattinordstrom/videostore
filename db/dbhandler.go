@@ -18,7 +18,7 @@ var gormDB *gorm.DB
 type Rental struct {
 	gorm.Model
 	VideoName string
-	Customer  string // TODO make new table Customers and change this to CustomerID
+	Customer  string
 	Status    string
 	RentalID  uuid.UUID
 }

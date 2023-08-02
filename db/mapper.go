@@ -43,7 +43,6 @@ func AddRental(context *gin.Context) {
 		RentalID:  rentalID,
 	}
 
-	// TODO use Raw here
 	result := gormDB.Create(&rental)
 
 	// ERROR
@@ -66,7 +65,6 @@ func AddRental(context *gin.Context) {
 }
 
 func ReturnRental(context *gin.Context) {
-	// TODO use Raw here
 	result := gormDB.Model(Rental{}).Where("rental_id = ?", context.Param("rentalid")).Update("status", RentalStatusAvailable)
 
 	// ERROR
